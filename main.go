@@ -1,9 +1,8 @@
 package main
 
-import (
-	"fmt"
-)
+import "os"
 
 func main() {
-	fmt.Println("hellow, world!")
+	app := makeApp()
+	app.Run(os.Args)
 }
