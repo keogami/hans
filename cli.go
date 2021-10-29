@@ -10,11 +10,9 @@ func makeApp() *cli.App {
 		Usage: "an app for managing and generating corpuses, used internally by OmniLotl",
 		Commands: []*cli.Command{
 			{
-				Name:  "gendb",
-				Usage: "<input-file> <output-dir> generates a KVS DB (level) using the input file",
-				Action: func(c *cli.Context) error {
-					return cli.Exit("good shit", 0)
-				},
+				Name:   "gendb",
+				Usage:  "<input-file> <output-dir> generates a KVS DB (level) using the input file",
+				Action: genDBMain,
 			},
 		},
 	}
