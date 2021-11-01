@@ -14,6 +14,11 @@ func makeApp() *cli.App {
 				Usage:  "<input-file> <output-dir> generates a KVS DB (level) using the input file",
 				Action: genDBMain,
 			},
+			{
+				Name:   "variate",
+				Usage:  "<word> takes a standard hinglish word and generates variations for it",
+				Action: variateMain,
+			},
 		},
 	}
 }
