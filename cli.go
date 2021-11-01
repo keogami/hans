@@ -19,6 +19,11 @@ func makeApp() *cli.App {
 				Usage:  "<word> takes a standard hinglish word and generates variations for it",
 				Action: variateMain,
 			},
+			{
+				Name:   "wordindex",
+				Usage:  "<input-file> <output-dir> counts word in the given file and produces a KVS",
+				Action: wordIndexMain,
+			},
 		},
 	}
 }
