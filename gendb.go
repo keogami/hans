@@ -13,7 +13,7 @@ import (
 // KVPair encaps the keys/value pair
 type KVPair struct {
 	Key   string
-	Value string
+	Value []byte
 }
 
 // JsonKVPair is just a string to string map corresponding to the Key/Value
@@ -41,9 +41,9 @@ func genDBMain(ctx *cli.Context) error {
 	defer db.Close()
 
 	const iterBuffer int = 10
-	iterChan := iterate(inputFile, iterBuffer)
+	iterChan := iterateKVJson(inputFile, iterBuffer)
 
-	n, err := collect(iterChan, db)
+	n, err := collectKVPair(iterChan, db)
 	if err != nil {
 		return err
 	}
@@ -52,8 +52,8 @@ func genDBMain(ctx *cli.Context) error {
 	return nil
 }
 
-// iterate parses the file and sends each parsed key/value pair out throuhg the iterChan
-func iterate(input io.Reader, buffer int) <-chan KVPair {
+// iterateKVJson parses the file and sends each parsed key/value pair out throuhg the iterChan
+func iterateKVJson(input io.Reader, buffer int) <-chan KVPair {
 	iterChan := make(chan KVPair, buffer)
 	go func() {
 		defer close(iterChan)
@@ -66,18 +66,18 @@ func iterate(input io.Reader, buffer int) <-chan KVPair {
 
 		for key, value := range data {
 			iterChan <- KVPair{
-				Key: key, Value: value,
+				Key: key, Value: []byte(value),
 			}
 		}
 	}()
 	return iterChan
 }
 
-// collect collects the key/value from pairs into the output writer
-func collect(pairs <-chan KVPair, output *leveldb.DB) (uint, error) {
+// collectKVPair collects the key/value from pairs into the output writer
+func collectKVPair(pairs <-chan KVPair, output *leveldb.DB) (uint, error) {
 	var count uint = 0
 	for pair := range pairs {
-		err := output.Put([]byte(pair.Key), []byte(pair.Value), nil)
+		err := output.Put([]byte(pair.Key), pair.Value, nil)
 		if err != nil {
 			return count, err
 		}
